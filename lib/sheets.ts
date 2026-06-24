@@ -20,7 +20,7 @@ export async function findProductByCode(code: string): Promise<Product | null> {
   const sheets = google.sheets({ version: 'v4', auth })
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.GOOGLE_SHEET_ID,
-    range: 'Sheet1!A:E',
+    range: "'Affiliate Products'!A:E",
   })
 
   const rows = response.data.values
