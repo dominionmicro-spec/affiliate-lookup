@@ -73,7 +73,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const product = await findProductByCode(code)
     return { props: { product, code } }
-  } catch {
-    return { props: { product: null, code } }
+  } catch (error) {
+    console.error("GOOGLE SHEETS ERROR:", error)
+    throw error
   }
 }
