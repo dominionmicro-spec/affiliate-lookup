@@ -1,3 +1,5 @@
+import Papa from "papaparse"
+
 export interface Product {
   productCode: string
   productName: string
@@ -16,13 +18,16 @@ export async function findProductByCode(
   const response = await fetch(CSV_URL)
   const csv = await response.text()
 
-  const rows = csv.trim().split("\n").slice(1)
+  const parsed = Papa.parse<string[]>(csv, {
+    header: false,
+    skipEmptyLines: true
+  })
+
+  const rows = parsed.data.slice(1)
 
   const search = code.toUpperCase()
 
-  for (const line of rows) {
-
-    const cols = line.split(",")
+  for (const cols of rows) {
 
     if ((cols[0] || "").trim().toUpperCase() === search) {
 
