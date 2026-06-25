@@ -1,5 +1,3 @@
-import { google } from 'googleapis'
-
 export interface Product {
   productCode: string
   productName: string
@@ -8,37 +6,36 @@ export interface Product {
   affiliateLink: string
 }
 
-export async function findProductByCode(code: string): Promise<Product | null> {
-  const auth = new google.auth.GoogleAuth({
-    credentials: {
-      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    },
-    scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-  })
+const CSV_URL =
+  "https://docs.google.com/spreadsheets/d/1OhYMoMvHZnoKTpi-YiITEzHC4ct7wthxyTDwsSmtezY/export?format=csv&gid=0"
 
-  const sheets = google.sheets({ version: 'v4', auth })
-  const response = await sheets.spreadsheets.values.get({
-    spreadsheetId: process.env.GOOGLE_SHEET_ID,
-    range: "'Affiliate Products'!A:E",
-  })
+export async function findProductByCode(
+  code: string
+): Promise<Product | null> {
 
-  const rows = response.data.values
-  if (!rows || rows.length < 2) return null
+  const response = await fetch(CSV_URL)
+  const csv = await response.text()
 
-  const dataRows = rows.slice(1)
-  const upperCode = code.toUpperCase()
+  const rows = csv.trim().split("\n").slice(1)
 
-  for (const row of dataRows) {
-    if (row[0]?.toString().toUpperCase() === upperCode) {
+  const search = code.toUpperCase()
+
+  for (const line of rows) {
+
+    const cols = line.split(",")
+
+    if ((cols[0] || "").trim().toUpperCase() === search) {
+
       return {
-        productCode: row[0]?.toString() ?? '',
-        productName: row[1]?.toString() ?? '',
-        productDescription: row[2]?.toString() ?? '',
-        productImage: row[3]?.toString() ?? '',
-        affiliateLink: row[4]?.toString() ?? '',
+        productCode: cols[0] || "",
+        productName: cols[1] || "",
+        productDescription: cols[2] || "",
+        productImage: cols[3] || "",
+        affiliateLink: cols[4] || ""
       }
+
     }
+
   }
 
   return null
