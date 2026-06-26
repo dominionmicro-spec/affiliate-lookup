@@ -11,26 +11,34 @@ export interface Product {
 const CSV_URL =
   "https://docs.google.com/spreadsheets/d/1OhYMoMvHZnoKTpi-YiITEzHC4ct7wthxyTDwsSmtezY/export?format=csv&gid=0"
 
-export async function findProductByCode(
-  code: string
-): Promise<Product | null> {
-  const response = await fetch(CSV_URL, { cache: 'no-store' })
-  const csv = await response.text()
+export async function findProductByCode(code: string): Promise<Product | null> {
+  try {
+    const response = await fetch(CSV_URL, { cache: "no-store" })
+    const csv = await response.text()
 
-  const parsed = Papa.parse(csv, {
-    header: true,
-    skipEmptyLines: true,
-  })
+    const parsed = Papa.parse(csv, {
+      header: true,
+      skipEmptyLines: true,
+    })
 
-  const rows = parsed.data as any[]
+    const rows = parsed.data as any[]
+    const search = code.toUpperCase()
 
-  const search = code.toUpperCase()
+    for (const row of rows) {
+      if ((row.product_code || "").toUpperCase() === search) {
+        return {
+          productCode: row.product_code || "",
+          productName: row.product_name || "",
+          productDescription: row.product_description || "",
+          productImage: row.product_image || "",
+          affiliateLink: row.affiliate_link || "",
+        }
+      }
+    }
 
-  for (const row of rows) {
-    if ((row.product_code || "").toUpperCase() === search) {
-      return {
-        productCode: row.product_code || "",
-        productName: row.product_name || "",
-        productDescription: row.product_description || "",
-        productImage: row.product_image || "",
-        affiliateLink:
+    return null
+  } catch (error) {
+    console.error("Failed to fetch sheet:", error)
+    return null
+  }
+}
