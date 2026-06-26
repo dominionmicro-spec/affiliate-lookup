@@ -9,7 +9,7 @@ export interface Product {
 }
 
 const CSV_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vTxLZkZiD-djxt678puEl9FCiwtVto8quSMBPpx-OOtLY5TGvWngLgq5oO0F-xOPs4J4pPamN09PoHF/pub?gid=0&single=true&output=csv"
+  "https://docs.google.com/spreadsheets/d/1OhYMoMvHZnoKTpi-YiITEzHC4ct7wthxyTDwsSmtezY/export?format=csv&gid=0"
 
 export async function findProductByCode(code: string): Promise<Product | null> {
   try {
