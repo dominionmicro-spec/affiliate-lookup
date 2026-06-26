@@ -52,6 +52,9 @@ export default function ProductPage({ product, code }: Props) {
             <p className="text-gray-600 mb-6 leading-relaxed">
               {product.productDescription}
             </p>
+            <p className="text-red-500">
+  {product.affiliateLink}
+</p>
             <a
               href={product.affiliateLink}
               target="_blank"
