@@ -23,7 +23,6 @@ skipEmptyLines: true,
 })
 
 const rows = parsed.data as any[]
-
 const search = code.toUpperCase()
 
 for (const row of rows) {
@@ -33,10 +32,11 @@ productCode: row.product_code || "",
 productName: row.product_name || "",
 productDescription: row.product_description || "",
 productImage: row.product_image || "",
-affiliateLink: row.affliate_link || ""
+affiliateLink: row.affiliate_link || ""
 }
 }
 }
 
 return null
 }
+
