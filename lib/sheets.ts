@@ -14,8 +14,7 @@ const CSV_URL =
 export async function findProductByCode(
   code: string
 ): Promise<Product | null> {
-
-  const response = await fetch(CSV_URL)
+  const response = await fetch(CSV_URL, { cache: 'no-store' })
   const csv = await response.text()
 
   const parsed = Papa.parse(csv, {
@@ -25,31 +24,13 @@ export async function findProductByCode(
 
   const rows = parsed.data as any[]
 
-  console.log("ROWS:", rows)
-
   const search = code.toUpperCase()
 
   for (const row of rows) {
-
-    console.log("ROW:", row)
-
     if ((row.product_code || "").toUpperCase() === search) {
-
       return {
         productCode: row.product_code || "",
         productName: row.product_name || "",
         productDescription: row.product_description || "",
         productImage: row.product_image || "",
-
         affiliateLink:
-          row.affiliate_link ||
-          row["affiliate_link"] ||
-          row["affiliate link"] ||
-          row["affiliateLink"] ||
-          ""
-      }
-    }
-  }
-
-  return null
-}
