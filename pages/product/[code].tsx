@@ -55,6 +55,9 @@ export default function ProductPage({ product, code }: Props) {
             <p className="text-red-500">
   {product.affiliateLink}
 </p>
+<pre className="text-xs text-green-600">
+{JSON.stringify(product, null, 2)}
+</pre>
             <a
               href={product.affiliateLink}
               target="_blank"
