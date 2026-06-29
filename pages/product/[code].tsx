@@ -1,3 +1,4 @@
+```tsx
 import { GetServerSideProps } from 'next'
 import { findProductByCode, Product } from '../../lib/sheets'
 
@@ -34,6 +35,7 @@ export default function ProductPage({ product, code }: Props) {
         <a href="/" className="text-blue-600 hover:underline mb-6 inline-block">
           &larr; Back to search
         </a>
+
         <div className="bg-white rounded-2xl shadow-md overflow-hidden">
           {product.productImage && (
             <img
@@ -42,22 +44,20 @@ export default function ProductPage({ product, code }: Props) {
               className="w-full h-72 object-cover"
             />
           )}
+
           <div className="p-6">
             <p className="text-sm text-gray-400 font-mono mb-1">
               {product.productCode}
             </p>
+
             <h1 className="text-2xl font-bold text-gray-900 mb-3">
               {product.productName}
             </h1>
+
             <p className="text-gray-600 mb-6 leading-relaxed">
               {product.productDescription}
             </p>
-            <p className="text-red-500">
-  {product.affiliateLink}
-</p>
-<pre className="text-xs text-green-600">
-{JSON.stringify(product, null, 2)}
-</pre>
+
             <a
               href={product.affiliateLink}
               target="_blank"
@@ -78,9 +78,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   try {
     const product = await findProductByCode(code)
-    return { props: { product, code } }
+    return {
+      props: {
+        product,
+        code,
+      },
+    }
   } catch (error) {
-    console.error("GOOGLE SHEETS ERROR:", error)
+    console.error('GOOGLE SHEETS ERROR:', error)
     throw error
   }
 }
+```
+
