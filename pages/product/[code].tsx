@@ -1,4 +1,3 @@
-```tsx
 import { GetServerSideProps } from 'next'
 import { findProductByCode, Product } from '../../lib/sheets'
 
@@ -15,9 +14,11 @@ export default function ProductPage({ product, code }: Props) {
           <h1 className="text-2xl font-bold text-gray-800 mb-2">
             Product not found
           </h1>
+
           <p className="text-gray-500 mb-6">
             No product found with code &ldquo;{code}&rdquo;
           </p>
+
           <a
             href="/"
             className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
@@ -32,7 +33,10 @@ export default function ProductPage({ product, code }: Props) {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-lg mx-auto">
-        <a href="/" className="text-blue-600 hover:underline mb-6 inline-block">
+        <a
+          href="/"
+          className="text-blue-600 hover:underline mb-6 inline-block"
+        >
           &larr; Back to search
         </a>
 
@@ -78,6 +82,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   try {
     const product = await findProductByCode(code)
+
     return {
       props: {
         product,
@@ -86,8 +91,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   } catch (error) {
     console.error('GOOGLE SHEETS ERROR:', error)
-    throw error
+
+    return {
+      props: {
+        product: null,
+        code,
+      },
+    }
   }
 }
-```
-
